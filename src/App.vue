@@ -10,7 +10,7 @@ const modal = useModal();
 const isNotAvaliable = $ref(true)
 
 const {width} = useWindowSize()
-const isMobile = $ref(false)
+let isMobile = $ref(false)
 
 watchEffect(() => {
   isMobile = width.value <= 1250;
@@ -23,8 +23,25 @@ watchEffect(() => {
   <NotAvaliable v-if="isMobile"/>
   <main class="bg-slate-900 flex relative h-screen" v-else>
     <NavBar/>
-    <InvoiceModal v-show="modal.open.value"/>
+    <transition name="invoice">
+      <InvoiceModal v-show="modal.open.value"/>
+    </transition>
     <RouterView/>
   </main>
 </template>
 
+
+<style scoped>
+
+.invoice-enter-active,
+.invoice-leave-active {
+  transition: .5s ease-out all;
+}
+
+
+.invoice-enter-from,
+.invoice-leave-to {
+  transform: translateX(-100%);
+}
+
+</style>
