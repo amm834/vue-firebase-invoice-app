@@ -7,10 +7,12 @@ specifiers:
   '@vuepic/vue-datepicker': ^3.4.8
   '@vueuse/core': ^9.2.0
   autoprefixer: ^10.4.10
+  dayjs: ^1.11.5
   pinia: ^2.0.21
   postcss: ^8.4.16
   tailwind-scrollbar: ^2.0.1
   tailwindcss: ^3.1.8
+  uid: ^2.0.0
   vite: ^3.0.9
   vue: ^3.2.38
   vue-router: ^4.1.5
@@ -20,7 +22,9 @@ dependencies:
   '@heroicons/vue': 2.0.11_vue@3.2.39
   '@vuepic/vue-datepicker': 3.4.8_vue@3.2.39
   '@vueuse/core': 9.2.0_vue@3.2.39
+  dayjs: 1.11.5
   pinia: 2.0.22_vue@3.2.39
+  uid: 2.0.0
   vue: 3.2.39
   vue-router: 4.1.5_vue@3.2.39
 
@@ -81,6 +85,11 @@ packages:
       vue: '>= 3'
     dependencies:
       vue: 3.2.39
+    dev: false
+
+  /@lukeed/csprng/1.0.1:
+    resolution: {integrity: sha512-uSvJdwQU5nK+Vdf6zxcWAY2A8r7uqe+gePwLWzJ+fsQehq18pc0I2hJKwypZ2aLM90+Er9u1xn4iLJPZ+xlL4g==}
+    engines: {node: '>=8'}
     dev: false
 
   /@nodelib/fs.scandir/2.1.5:
@@ -341,6 +350,10 @@ packages:
   /date-fns/2.29.3:
     resolution: {integrity: sha512-dDCnyH2WnnKusqvZZ6+jA1O51Ibt8ZMRNkDZdyAyK4YfbDwa/cEmuztzG5pk6hqlp9aSBPYcjOlktquahGwGeA==}
     engines: {node: '>=0.11'}
+    dev: false
+
+  /dayjs/1.11.5:
+    resolution: {integrity: sha512-CAdX5Q3YW3Gclyo5Vpqkgpj8fSdLQcRuzfX6mC6Phy0nfJ0eGYOeS7m4mt2plDWLAtA4TqTakvbboHvUxfe4iA==}
     dev: false
 
   /defined/1.0.0:
@@ -949,6 +962,13 @@ packages:
     dependencies:
       is-number: 7.0.0
     dev: true
+
+  /uid/2.0.0:
+    resolution: {integrity: sha512-hFw+zKBA1szYdbZWj6FjTxZzJnKNf+wTDcsxlJaXS64MCy9LQEmJUVieGYHCKek/WRyFIcs0cEXtGIQmfvHe2A==}
+    engines: {node: '>=8'}
+    dependencies:
+      '@lukeed/csprng': 1.0.1
+    dev: false
 
   /update-browserslist-db/1.0.9_browserslist@4.21.3:
     resolution: {integrity: sha512-/xsqn21EGVdXI3EXSum1Yckj3ZVZugqyOZQ/CxYPBD/R+ko9NSUScf8tFF4dOKY+2pvSSJA/S+5B8s4Zr4kyvg==}

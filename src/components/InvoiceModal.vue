@@ -4,14 +4,47 @@ import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
 import {Menu, MenuButton, MenuItem, MenuItems} from '@headlessui/vue'
 import {ChevronDownIcon, PlusCircleIcon} from '@heroicons/vue/24/solid'
+import {watchEffect} from "vue";
+import * as dayjs from "dayjs";
+import {uid} from "uid";
 
 const modal = useModal()
-const date = $ref()
-const paymentsTerms = ['Net 30 days', 'Net 60 days']
-let selectedPyament = $ref(paymentsTerms[0])
+
+const paymentsTerms = [30, 60]
+let selectedPaymentDateType = $ref(paymentsTerms[0])
+
+// states
+const invoiceItems = $ref([])
+const street = $ref()
+const city = $ref()
+const zip = $ref()
+const country = $ref()
+const client_name = $ref()
+const client_email = $ref()
+const client_street = $ref()
+const client_city = $ref()
+const client_zip = $ref()
+const client_country = $ref()
+let invoiceDate = $ref(Date.now())
+let dueDate = $ref()
+const description = $ref()
+
+const formatDate = (date) => {
+  const day = date.getDate();
+  const month = date.getMonth() + 1;
+  const year = date.getFullYear();
+
+  return `${day}/${month}/${year}`;
+}
+
+watchEffect(() => {
+  // change to valid date format
+  invoiceDate = dayjs(new Date(invoiceDate))
+  dueDate = invoiceDate.add(selectedPaymentDateType, 'day').format('DD/MM/YYYY')
+})
 
 
-const changePaymentTerm = (index) => selectedPyament = paymentsTerms[index]
+const changePaymentTerm = (index) => selectedPaymentDateType = paymentsTerms[index]
 
 const createInvoice = () => {
   // TODO: create invoice
@@ -23,6 +56,19 @@ const cancelInvoice = () => {
 
 const saveAsDraft = () => {
   // TODO: save as draft
+}
+
+const addNewItemInvoiceItem = () => {
+  invoiceItems.push({
+    id: uid(),
+    name: null,
+    price: null,
+    quantity: 1,
+    total: 0,
+  })
+}
+const removeInvoiceItem = (id) => {
+  invoiceItems = invoiceItems.filter((item) => item.id !== id);
 }
 </script>
 <template>
@@ -40,36 +86,44 @@ const saveAsDraft = () => {
       <div class="mb-6">
         <label for="street" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Street
           Address</label>
-        <input type="text" id="street"
-               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-               >
+        <input
+            v-model="street"
+            type="text" id="street"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        >
       </div>
 
       <div class="grid grid-cols-3 gap-x-4">
         <!--        City -->
         <div class="mb-6">
           <label for="city" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">City</label>
-          <input type="text" id="city"
-                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                 required>
+          <input
+              v-model="city"
+              type="text" id="city"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          >
         </div>
         <!--        Zip code -->
         <div class="mb-6">
           <label for="zip" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
             Zip
           </label>
-          <input type="number" id="zip"
-                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                 required>
+          <input
+              v-model="zip"
+              type="number" id="zip"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          >
         </div>
         <!--        Country -->
         <div class="mb-6">
           <label for="country" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
             Country
           </label>
-          <input type="text" id="country"
-                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                 required>
+          <input
+              v-model="country"
+              type="text" id="country"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          >
         </div>
       </div>
 
@@ -84,54 +138,54 @@ const saveAsDraft = () => {
       <div class="mb-6">
         <label for="client-name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Client
           Name</label>
-        <input type="text" id="client-name"
+        <input v-model="client_name" type="text" id="client-name"
                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-               required>
+        >
       </div>
 
       <!--      Client email -->
       <div class="mb-6">
         <label for="client-email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Client
           Email</label>
-        <input type="text" id="client-email"
+        <input v-model="client_email" type="text" id="client-email"
                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-               required>
+        >
       </div>
 
       <!--     Client Street Address -->
       <div class="mb-6">
         <label for="client-street-address" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Street
           Address</label>
-        <input type="text" id="client-street-address"
+        <input v-model="client_street" type="text" id="client-street-address"
                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-               required>
+        >
       </div>
 
       <div class="grid grid-cols-3 gap-x-4">
         <!--        City -->
         <div class="mb-6">
           <label for="client-city" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">City</label>
-          <input type="text" id="client-city"
+          <input v-model="client_city" type="text" id="client-city"
                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                 required>
+          >
         </div>
         <!--        Zip code -->
         <div class="mb-6">
           <label for="client-zip" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
             Zip
           </label>
-          <input type="number" id="client-zip"
+          <input v-model="client_zip" type="number" id="client-zip"
                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                 required>
+          >
         </div>
         <!--        Country -->
         <div class="mb-6">
           <label for="client-country" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
             Country
           </label>
-          <input type="text" id="client-country"
+          <input v-model="client_country" type="text" id="client-country"
                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                 required>
+          >
         </div>
 
 
@@ -141,8 +195,12 @@ const saveAsDraft = () => {
             <label for="client-country" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
               Invoice Date
             </label>
-            <Datepicker v-model="date" id="invoice-date" close-on-auto-apply dark text-input
+            <Datepicker v-model="invoiceDate"
+                        id="invoice-date"
+                        close-on-auto-apply
+                        dark text-input
                         hide-input-icon
+                        :format="formatDate"
             />
           </div>
 
@@ -151,8 +209,13 @@ const saveAsDraft = () => {
             <label for="client-country" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
               Due Date
             </label>
-            <Datepicker id="invoice-date" close-on-auto-apply dark text-input
-                        hide-input-icon disabled/>
+
+            <input
+                v-model="dueDate"
+                type="text"
+                id="client-country"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                disabled>
           </div>
 
         </div>
@@ -167,7 +230,7 @@ const saveAsDraft = () => {
             <MenuButton
                 class="flex bg-gray-500 w-full justify-between rounded-md px-4 py-2  text-white focus:outline-none"
             >
-              {{ selectedPyament }}
+              In next {{ selectedPaymentDateType }} days
               <ChevronDownIcon
                   class="ml-2 -mr-1 h-5 w-5 text-violet-200 hover:text-violet-100"
                   aria-hidden="true"
@@ -199,7 +262,7 @@ const saveAsDraft = () => {
                 ]"
                       @click="changePaymentTerm(index)"
                   >
-                    {{ payment }}
+                    In next {{ payment }} days
                   </button>
                 </MenuItem>
               </div>
@@ -213,9 +276,9 @@ const saveAsDraft = () => {
       <div class="mb-6 col-span-full">
         <label for="product-description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Product
           Description</label>
-        <input type="text" id="product-description"
+        <input v-model="description" type="text" id="product-description"
                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-               required>
+        >
       </div>
 
     </section>
@@ -233,11 +296,14 @@ const saveAsDraft = () => {
             <th scope="col" class="py-3 px-6">
               Item Name
             </th>
-            <th scope="col" class="py-3 px-6 text-center">
-              Qty
-            </th>
             <th scope="col" class="py-3 px-6">
               Price
+            </th>
+            <th scope="col" class="py-3 px-6 text-center">
+              Quantity
+            </th>
+            <th scope="col" class="py-3 px-6">
+              Total
             </th>
             <th scope="col" class="py-3 px-6">
               Action
@@ -245,13 +311,32 @@ const saveAsDraft = () => {
           </tr>
           </thead>
           <tbody>
-          <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+          <tr
+              class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+              v-for="item in invoiceItems"
+              :key="item.id"
+          >
             <td class="py-4 px-6 font-semibold text-gray-900 dark:text-white">
-              Apple Watch
+              <input
+                  v-model="item.name"
+                  type="text"
+                  id="product-description"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              >
+            </td>
+
+            <td class="py-4 px-6 font-semibold text-gray-900 dark:text-white">
+              <input
+                  v-model="item.price"
+                  type="text"
+                  id="product-description"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              >
             </td>
             <td class="py-4 px-6">
               <div class="flex items-center space-x-3">
                 <button
+                    @click="item.quantity--"
                     class="inline-flex items-center p-1 text-sm font-medium text-gray-500 bg-white rounded-full border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
                     type="button">
                   <span class="sr-only">Quantity button</span>
@@ -262,11 +347,14 @@ const saveAsDraft = () => {
                   </svg>
                 </button>
                 <div>
-                  <input type="number" id="first_product"
-                         class="bg-gray-50 w-14 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block px-2.5 py-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                         placeholder="1" required="">
+                  <input
+                      v-model="item.quantity"
+                      type="number" id="first_product"
+                      class="bg-gray-50 w-14 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block px-2.5 py-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      placeholder="1">
                 </div>
                 <button
+                    @click="item.quantity++"
                     class="inline-flex items-center p-1 text-sm font-medium text-gray-500 bg-white rounded-full border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
                     type="button">
                   <span class="sr-only">Quantity button</span>
@@ -279,11 +367,15 @@ const saveAsDraft = () => {
                 </button>
               </div>
             </td>
+            <!--            Total -->
             <td class="py-4 px-6 font-semibold text-gray-900 dark:text-white">
-              $599
+              {{ item.total = item.quantity * item.price }}
             </td>
             <td class="py-4 px-6">
-              <a href="#" class="font-medium text-red-600 dark:text-red-500 hover:underline">Remove</a>
+              <button
+                  @click="removeInvoiceItem(item.id)"
+                  class="font-medium text-red-600 dark:text-red-500 hover:underline">Remove
+              </button>
             </td>
           </tr>
           </tbody>
@@ -292,7 +384,9 @@ const saveAsDraft = () => {
 
       <!--       Add new item button-->
       <button
-          class="transition-colors flex justify-center items-center gap-x-3 my-4 bg-slate-800 col-span-full w-full rounded-full py-3 hover:bg-slate-700">
+          class="transition-colors flex justify-center items-center gap-x-3 my-4 bg-slate-800 col-span-full w-full rounded-full py-3 hover:bg-slate-700"
+          @click="addNewItemInvoiceItem"
+      >
         <PlusCircleIcon class="h-8 text-indigo-600"/>
         <span> Add New Item</span>
       </button>
