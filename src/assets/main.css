@@ -1,1 +1,15 @@
 @import "./base.css";
+@import url('https://fonts.googleapis.com/css2?family=Padauk&family=Poppins:wght@400;500;600;700&display=swap');
+
+.btn {
+    @apply px-4 py-2 outline-none
+}
+
+
+.btn-primary {
+    @apply bg-purple-700  transition-colors
+}
+
+.btn-primary:hover {
+    @apply bg-purple-600
+}
