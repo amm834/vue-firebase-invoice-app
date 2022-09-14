@@ -13,3 +13,25 @@
 .btn-primary:hover {
     @apply bg-purple-600
 }
+
+.dp__theme_dark {
+    --dp-background-color: rgb(55 65 81);
+    --dp-text-color: white;
+    --dp-hover-color: rgb(107 114 128);
+    --dp-hover-text-color: #ffffff;
+    --dp-hover-icon-color: rgb(55 65 81);
+    --dp-primary-color:  rgb(107 114 128);
+    --dp-primary-text-color: #ffffff;
+    --dp-secondary-color: #a9a9a9;
+    --dp-border-color: #2d2d2d;
+    --dp-menu-border-color: #2d2d2d;
+    --dp-border-color-hover: #aaaeb7;
+    --dp-disabled-color: rgb(55 65 81);
+    --dp-scroll-bar-background: #212121;
+    --dp-scroll-bar-color: #484848;
+    --dp-success-color: #00701a;
+    --dp-success-color-disabled: #428f59;
+    --dp-icon-color: #959595;
+    --dp-danger-color: #e53935;
+    --dp-highlight-color: rgba(0, 92, 178, 0.2);
+}
