@@ -12,6 +12,7 @@
     "@vuepic/vue-datepicker": "^3.4.8",
     "@vueuse/core": "^9.2.0",
     "dayjs": "^1.11.5",
+    "firebase": "^9.9.4",
     "pinia": "^2.0.21",
     "uid": "^2.0.0",
     "vue": "^3.2.38",

@@ -1,7 +1,7 @@
 <script setup>
 import {Menu, MenuButton, MenuItem, MenuItems} from '@headlessui/vue'
 import {ChevronDownIcon, PlusCircleIcon} from '@heroicons/vue/24/solid'
-import useModal from "../modal";
+import useModal from "../composables/modal";
 
 const statuses = ['Pending', 'Draft', 'Paid']
 const modal = useModal();

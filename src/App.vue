@@ -1,13 +1,12 @@
 <script setup>
 import NavBar from "./views/NavBar.vue";
 import InvoiceModal from "./components/InvoiceModal.vue";
-import useModal from "./modal";
+import useModal from "./composables/modal";
 import NotAvaliable from "./views/NotAvaliable.vue";
 import {useWindowSize} from '@vueuse/core'
 import {watchEffect} from "vue";
 
 const modal = useModal();
-const isNotAvaliable = $ref(true)
 
 const {width} = useWindowSize()
 let isMobile = $ref(false)
@@ -23,13 +22,14 @@ watchEffect(() => {
   <NotAvaliable v-if="isMobile"/>
   <main class="bg-slate-900 flex relative h-screen" v-else>
     <NavBar/>
+
     <transition name="invoice">
       <InvoiceModal v-show="modal.open.value"/>
     </transition>
+
     <RouterView/>
   </main>
 </template>
-
 
 <style scoped>
 
@@ -45,3 +45,4 @@ watchEffect(() => {
 }
 
 </style>
+
