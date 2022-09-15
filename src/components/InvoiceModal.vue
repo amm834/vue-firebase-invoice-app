@@ -4,11 +4,14 @@ import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
 import {Menu, MenuButton, MenuItem, MenuItems} from '@headlessui/vue'
 import {ChevronDownIcon, PlusCircleIcon} from '@heroicons/vue/24/solid'
-import {watchEffect} from "vue";
+import {onMounted, watchEffect} from "vue";
 import * as dayjs from "dayjs";
 import {uid} from "uid";
 import {useInvoicesStore} from "../stores/invoices.store";
 import Spinner from "./Spinner.vue";
+import AlertModal from "./AlertModal.vue";
+import {onClickOutside, useDebounce} from '@vueuse/core'
+import useAlertModal from "../composables/alert-modal";
 
 const modal = useModal()
 
@@ -98,17 +101,16 @@ const removeInvoiceItem = (id) => {
   invoiceItems = invoiceItems.filter((item) => item.id !== id);
 }
 
-
 </script>
 <template>
   <div>
     <Spinner v-if="invoicesStore.loading"/>
     <form
+        ref="form"
         v-else
         @submit.prevent="createInvoice"
         class="bg-slate-900 shadow-lg shadow-lg shadow-gray-800 text-white  absolute left-16 py-20 pl-14 pr-12 h-screen overflow-y-scroll scrollbar z-10">
       <h2 class="text-2xl font-bold mb-12">New Invoice</h2>
-
       <!--    Billing from section -->
       <section class="mb-16">
         <h3 class="text-purple-600 font-semibold mb-6">Bill From</h3>

@@ -5,6 +5,9 @@ import useModal from "./composables/modal";
 import NotAvaliable from "./views/NotAvaliable.vue";
 import {useWindowSize} from '@vueuse/core'
 import {watchEffect} from "vue";
+import AlertModal from "./components/AlertModal.vue";
+import useAlertModal from "./composables/alert-modal";
+import {TransitionRoot} from '@headlessui/vue'
 
 const modal = useModal();
 
@@ -15,6 +18,8 @@ watchEffect(() => {
   isMobile = width.value <= 1250;
 })
 
+const alertModal = useAlertModal()
+
 
 </script>
 
@@ -23,11 +28,21 @@ watchEffect(() => {
   <main class="bg-slate-900 flex relative h-screen" v-else>
     <NavBar/>
 
-    <transition name="invoice">
+    <TransitionRoot
+        :show="modal.open.value"
+        enter="transition-opacity duration-1000"
+        enterFrom="opacity-0"
+        enterTo="opacity-100"
+        leave="transition-opacity duration-1000"
+        leaveFrom="opacity-100"
+        leaveTo="opacity-0"
+    >
       <InvoiceModal v-show="modal.open.value"/>
-    </transition>
+    </TransitionRoot>
 
     <RouterView/>
+
+    <AlertModal v-show="alertModal.open.value"/>
   </main>
 </template>
 
